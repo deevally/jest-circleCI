@@ -1,17 +1,17 @@
-version: 2.1
+version: 2
 jobs:
   build:
-    working_directory: ~/public
+    working_directory: ~/mern-starter
     # The primary container is an instance of the first image listed. The job's commands run in this container.
     docker:
-      - image: circleci/node:11.10.0
-      # The secondary container is an instance of the second listed image which is run in a common network where ports exposed on the primary container are available on localhost.
-
+      - image: circleci/node:4.8.2-jessie
+    # The secondary container is an instance of the second listed image which is run in a common network where ports exposed on the primary container are available on localhost.
+      - image: mongo:3.4.4-jessie
     steps:
       - checkout
       - run:
           name: Update npm
-          command: "sudo npm install -g npm@latest"
+          command: 'sudo npm install -g npm@latest'
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
@@ -23,7 +23,8 @@ jobs:
             - node_modules
   test:
     docker:
-      - image: circleci/node:11.10.0
+      - image: circleci/node:4.8.2-jessie
+      - image: mongo:3.4.4-jessie
     steps:
       - checkout
       - run:
@@ -31,7 +32,7 @@ jobs:
           command: npm test
       - run:
           name: Generate code coverage
-          command: "./node_modules/.bin/nyc report --reporter=text-lcov"
+          command: './node_modules/.bin/nyc report --reporter=text-lcov'
       - store_artifacts:
           path: test-results.xml
           prefix: tests
