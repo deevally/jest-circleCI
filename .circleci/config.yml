@@ -18,9 +18,10 @@ jobs:
           name: Install npm wee
           command: npm install
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
+        paths:
+          - node_modules
+        key: v1-dependencies-{{ checksum "package.json" }}
+
   test:
     docker:
       - image: circleci/node:11.10.0
